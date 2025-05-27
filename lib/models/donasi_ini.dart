@@ -58,27 +58,27 @@ class Donasi {
     this.current,
   });
 
-  factory Donasi.fromJson(Map<String, dynamic> json) {
-    return Donasi(
-      id: json['id'] != null ? int.tryParse(json['id'].toString()) : null,
-      nama: json['nama'],
-      title: json['title'],
-      description: json['description'],
-      targetAmount: json['target_amount'] != null ? double.tryParse(json['target_amount'].toString()) : null,
-      collectedAmount: json['collected_amount'] != null ? double.tryParse(json['collected_amount'].toString()) : null,
-      deadline: json['deadline'],
-      createdBy: json['created_by'] != null ? int.tryParse(json['created_by'].toString()) : null,
-      createdAt: json['created_at'],
-      foto: json['foto'],
-      imageUrl: json['image_url'],
-      nominal: json['nominal'] != null ? double.tryParse(json['nominal'].toString()) : null,
-      pesan: json['pesan'],
-      progress: json['progress'] != null ? double.tryParse(json['progress'].toString()) : null,
-      isEmergency: json['is_emergency'] == 1 || json['is_emergency'] == true,
-      target: json['target'] != null ? double.tryParse(json['target'].toString()) : null,
-      current: json['current'] != null ? double.tryParse(json['current'].toString()) : null,
-    );
-  }
+factory Donasi.fromJson(Map<String, dynamic> json) {
+  return Donasi(
+    id: json['id'] != null ? int.tryParse(json['id'].toString()) : null,
+    nama: json['nama'],
+    title: json['title'],
+    description: json['description'],
+    targetAmount: json['target_amount'] != null ? double.tryParse(json['target_amount'].toString()) : null,
+    collectedAmount: json['collected_amount'] != null ? double.tryParse(json['collected_amount'].toString()) : null,
+    deadline: json['deadline'],
+    createdBy: json['created_by'] != null ? int.tryParse(json['created_by'].toString()) : null,
+    createdAt: json['created_at'],
+    foto: json['foto'],
+    imageUrl: json['image_url'],
+    nominal: json['nominal'] != null ? double.tryParse(json['nominal'].toString()) : null,
+    pesan: json['pesan'],
+    progress: json['progress'] != null ? double.tryParse(json['progress'].toString()) : null,
+    isEmergency: json['is_emergency'] == 1 || json['is_emergency'] == '1' || json['is_emergency'] == true,
+    target: json['target'] != null ? double.tryParse(json['target'].toString()) : null,
+    current: json['current'] != null ? double.tryParse(json['current'].toString()) : null,
+  );
+}
 
   Map<String, dynamic> toJson() {
     return {

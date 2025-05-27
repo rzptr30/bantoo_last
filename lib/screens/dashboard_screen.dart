@@ -59,6 +59,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     if (snap.hasError) {
                       return Center(child: Text('Error: ${snap.error}'));
                     }
+                    // Ambil semua data donasi tanpa filter emergency!
                     final data = snap.data ?? [];
                     if (data.isEmpty) {
                       return Container(
@@ -74,7 +75,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             ),
                             const SizedBox(height: 8),
                             const Text(
-                              'Belum ada donasi emergency',
+                              'Belum ada donasi',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,

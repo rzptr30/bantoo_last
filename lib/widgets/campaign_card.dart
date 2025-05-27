@@ -116,8 +116,8 @@ class CampaignCard extends StatelessWidget {
                             Text(
                               rupiah.format(collected),
                               style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
                               ),
                             ),
                           ],
@@ -130,8 +130,8 @@ class CampaignCard extends StatelessWidget {
                             Text(
                               expired,
                               style: const TextStyle(
-                                fontSize: 13,
-                                color: Colors.black87,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
                               ),
                             ),
                           ],
