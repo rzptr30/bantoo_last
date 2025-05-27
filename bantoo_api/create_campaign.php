@@ -70,15 +70,15 @@ if ($targetAmount > 1000000000000) { // 1 trillion limit
 }
 
 // SQL to insert a record
-$sql = "INSERT INTO campaigns (title, description, target_amount, collected_amount, image_url, deadline, is_emergency, progress, created_at, updated_at) 
+$sql = "INSERT INTO donasi (title, description, target_amount, collected_amount, image_url, deadline, is_emergency, progress, created_at, updated_at) 
         VALUES ('$title', '$description', $targetAmount, $collectedAmount, '$imageUrl', '$deadline', $isEmergency, $progress, NOW(), NOW())";
 
 if ($conn->query($sql) === TRUE) {
-    $campaign_id = $conn->insert_id;
+    $donasi_id = $conn->insert_id;
     echo json_encode([
         'success' => true,
         'message' => 'Campaign created successfully',
-        'campaign_id' => $campaign_id
+        'donasi_id' => $donasi_id
     ]);
 } else {
     echo json_encode([

@@ -4,10 +4,9 @@ import 'package:http/http.dart' as http;
 import '../models/donasi_ini.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Add this dependency
 
-class ApiService {
-  // Default server URL
-  static String baseUrl = 'http://192.168.1.50/bantoo_api';
-  static const String DEFAULT_URL = 'http://192.168.1.50/bantoo_api';
+class ApiService {  // Ganti baseUrl dan DEFAULT_URL menjadi:
+  static String baseUrl = 'http://10.0.2.2/bantoo_last/bantoo_api';
+  static const String DEFAULT_URL = 'http://10.0.2.2/bantoo_last/bantoo_api';
   
   // Initialize with stored URL if available
   static Future<void> initializeBaseUrl() async {
