@@ -1,92 +1,149 @@
 import 'package:flutter/material.dart';
 import '../models/donasi_ini.dart';
+import 'package:intl/intl.dart';
 
 class CampaignCard extends StatelessWidget {
   final Donasi donasi;
-
-  const CampaignCard({
-    super.key,  // Gunakan super parameter
-    required this.donasi,
-  });
+  const CampaignCard({Key? key, required this.donasi}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final rupiah = NumberFormat.currency(locale: 'id', symbol: 'Rp', decimalDigits: 0);
+    final dateFmt = DateFormat('dd/MM/yyyy');
+    final collected = donasi.displayCollected;
+    final target = donasi.displayTarget == 0 ? 1 : donasi.displayTarget;
+    final progress = donasi.progressPercentage.clamp(0.0, 1.0);
+
+    String expired = '-';
+    if (donasi.displayDeadline.isNotEmpty) {
+      try {
+        expired = dateFmt.format(DateTime.parse(donasi.displayDeadline));
+      } catch (_) {}
+    }
+
     return Container(
-      width: 280,
-      clipBehavior: Clip.antiAlias,
+      width: 220,
+      margin: const EdgeInsets.only(top: 8, bottom: 8),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.withAlpha(50)),  // Gunakan withAlpha daripada withOpacity
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 6,
+            offset: Offset(0, 2),
+          )
+        ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Image
-          Container(
-            height: 120,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(
-                  donasi.imageUrl ?? donasi.foto ?? 'https://via.placeholder.com/280x120?text=Bantoo',
-                ),
-                fit: BoxFit.cover,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(14),
+          onTap: () {
+            // TODO: navigate to campaign detail
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Gambar
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
+                child: donasi.displayImage.isNotEmpty
+                  ? Image.network(
+                      donasi.displayImage,
+                      width: 220,
+                      height: 110,
+                      fit: BoxFit.cover,
+                      errorBuilder: (c, e, s) => Container(
+                        color: Colors.grey[300],
+                        height: 110,
+                        width: 220,
+                        child: const Icon(Icons.broken_image, size: 40),
+                      ),
+                    )
+                  : Container(
+                      width: 220,
+                      height: 110,
+                      color: Colors.grey[300],
+                      child: const Icon(Icons.image, size: 40),
+                    ),
               ),
-            ),
-          ),
-          
-          // Content
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Title
-                Text(
-                  donasi.title ?? donasi.nama ?? 'Untitled Campaign',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 8),
-                
-                // Progress bar
-                LinearProgressIndicator(
-                  value: donasi.progressPercentage ?? 0,
-                  backgroundColor: Colors.grey[200],
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    Theme.of(context).primaryColor,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                
-                // Collected amount
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Judul
                     Text(
-                      'Rp ${(donasi.collectedAmount ?? donasi.current ?? 0).toStringAsFixed(0)}',
-                      style: TextStyle(
+                      donasi.displayTitle,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Theme.of(context).primaryColor,
+                        fontSize: 15,
+                        color: Colors.black87,
                       ),
                     ),
-                    Text(
-                      '${((donasi.progressPercentage ?? 0) * 100).toStringAsFixed(0)}%',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 12,
-                      ),
+                    const SizedBox(height: 6),
+                    // Progress bar & percent
+                    Row(
+                      children: [
+                        Expanded(
+                          child: LinearProgressIndicator(
+                            value: progress,
+                            minHeight: 7,
+                            backgroundColor: Colors.grey[200],
+                            color: Colors.green,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Text('${(progress * 100).round()}%',
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    // Collected & expired
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('collected',
+                                style: TextStyle(fontSize: 11, color: Colors.grey)),
+                            Text(
+                              rupiah.format(collected),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            const Text('expired',
+                                style: TextStyle(fontSize: 11, color: Colors.grey)),
+                            Text(
+                              expired,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

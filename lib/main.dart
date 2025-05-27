@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'services/api_service.dart';
-// Import your required screens
-import 'screens/home_screen.dart'; // Replace with your actual home screen
+
+// Import all screens you need
+import 'screens/splash_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/register_screen.dart';
+import 'screens/dashboard_screen.dart';
+import 'screens/add_campaign_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // Initialize API service with stored URL
   await ApiService.initializeBaseUrl();
-  
   runApp(const MyApp());
 }
 
@@ -23,8 +25,14 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const HomeScreen(), // Replace with your home screen
-      // Your app routes
+      initialRoute: '/splash',
+      routes: {
+        '/splash': (context) => const SplashScreen(),
+        '/login': (context) => const LoginScreen(),
+        '/register': (context) => const RegisterScreen(),
+        '/dashboard': (context) => const DashboardScreen(),
+        '/add-campaign': (context) => const AddCampaignScreen(),
+      },
     );
   }
 }

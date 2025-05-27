@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../models/donasi_ini.dart';
 import '../services/api_service.dart';
-import '../widgets/widgets.dart';   // barrel file
-import 'emergency_bantoo_screen.dart'; // Import halaman emergency bantoo
-import 'add_campaign_screen.dart';  // Import halaman tambah campaign
+import '../widgets/widgets.dart';
+import '../widgets/campaign_card.dart'; // pastikan import ini ada
+import 'emergency_bantoo_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -22,16 +22,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     futureDonasi = ApiService.getDonasi();
   }
 
-  /* ───── helper ───── */
   void _refresh() => setState(() => futureDonasi = ApiService.getDonasi());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /* ───────────  APP BAR  ─────────── */
       appBar: dashboardAppBar(onRefresh: _refresh),
-
-      /* ───────────  BODY  ─────────── */
       body: RefreshIndicator(
         onRefresh: () async => _refresh(),
         child: CustomScrollView(
@@ -39,7 +35,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const SliverToBoxAdapter(child: GreetingCard()),
             const SliverToBoxAdapter(child: SearchBarDash()),
 
-            /* ── Section 1 : Campaign Emergency ── */
             SectionHeader(
               title: 'Emergency Bantoo!',
               showSeeAll: true,
@@ -49,12 +44,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   MaterialPageRoute(
                     builder: (context) => const EmergencyBantooScreen(),
                   ),
-                ).then((_) => _refresh()); // Refresh setelah kembali dari halaman Emergency
+                ).then((_) => _refresh());
               },
             ),
             SliverToBoxAdapter(
               child: SizedBox(
-                height: 230,
+                height: 250, // sedikit lebih tinggi agar card & progress bar muat
                 child: FutureBuilder<List<Donasi>>(
                   future: futureDonasi,
                   builder: (context, snap) {
@@ -73,9 +68,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Icon(
-                              Icons.campaign_outlined, 
-                              size: 40, 
-                              color: Colors.grey
+                              Icons.campaign_outlined,
+                              size: 40,
+                              color: Colors.grey,
                             ),
                             const SizedBox(height: 8),
                             const Text(
@@ -88,12 +83,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             const SizedBox(height: 8),
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const AddCampaignScreen(),
-                                  ),
-                                ).then((_) => _refresh());
+                                Navigator.pushNamed(context, '/add-campaign')
+                                  .then((_) => _refresh());
                               },
                               child: const Text('Tambah Campaign'),
                             ),
@@ -113,7 +104,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ),
 
-            /* ── Section 2 : Event ── */
             const SectionHeader(title: 'The Event Is About To Expire'),
             SliverToBoxAdapter(
               child: SizedBox(
@@ -127,7 +117,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     title: 'Pelatihan One Day Thousand Smiles',
                     subtitle: 'Surabaya, Jawa Timur • 14/05/2025',
                     imageAsset: 'assets/images/event_$i.jpg',
-                    // Tambahkan error handler untuk gambar
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
                         width: 200,
@@ -145,27 +134,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ),
 
-            /* ── Section 3 : Category chips ── */
             const SectionHeader(title: 'Choose Bantoo Favourite Category'),
             const SliverToBoxAdapter(child: CategoryChips()),
 
-            /* ── Section 4 : Banner ajakan ── */
             const SectionHeader(title: 'Ask For New Campaign'),
             SliverToBoxAdapter(
               child: InkWell(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const AddCampaignScreen(),
-                    ),
-                  ).then((_) => _refresh());
+                  Navigator.pushNamed(context, '/add-campaign')
+                    .then((_) => _refresh());
                 },
                 child: const BannerAddCampaign(),
               ),
             ),
 
-            /* ── Footer ── */
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 24),
@@ -180,8 +162,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ],
         ),
       ),
-
-      /* ───────────  BOTTOM NAV  ─────────── */
       bottomNavigationBar: mainBottomBar(
         current: _currentIndex,
         onTap: (i) => setState(() => _currentIndex = i),

@@ -8,27 +8,34 @@ class Donasi {
   final String? deadline;
   final int? createdBy;
   final String? createdAt;
-  final String? foto;         // Properti foto tetap ada
-  final String? imageUrl;     // Tambahkan properti imageUrl
+  final String? foto;
+  final String? imageUrl;
   final double? nominal;
   final String? pesan;
   final double? progress;
   final bool? isEmergency;
-  final double? target;       // Tambahkan properti target
-  final double? current;      // Tambahkan properti current
+  final double? target;
+  final double? current;
 
-  // Tambahkan getter untuk menghitung persentase progres jika tidak ada nilai progress
-  double? get progressPercentage {
-    // Gunakan progress jika sudah ada
-    if (progress != null) {
-      return progress;
-    }
-    // Hitung dari targetAmount dan collectedAmount jika keduanya tersedia
-    if (targetAmount == null || targetAmount == 0 || collectedAmount == null) {
-      return 0.0;
-    }
-    final percentage = collectedAmount! / targetAmount!;
-    return percentage > 1 ? 1.0 : percentage;
+  // Getter agar widget bisa akses data seragam tanpa cek null satu-satu
+  String get displayTitle => title ?? nama ?? '';
+  String get displayImage =>
+      (imageUrl != null && imageUrl!.isNotEmpty)
+          ? imageUrl!
+          : (foto ?? '');
+  double get displayTarget =>
+      targetAmount ?? target ?? 1.0;
+  double get displayCollected =>
+      collectedAmount ?? current ?? nominal ?? 0.0;
+  String get displayDeadline => deadline ?? '';
+
+  double get progressPercentage {
+    if (progress != null) return progress!;
+    final target = displayTarget;
+    final collected = displayCollected;
+    if (target == 0) return 0.0;
+    double percent = collected / target;
+    return percent > 1 ? 1.0 : percent;
   }
 
   Donasi({
@@ -42,13 +49,13 @@ class Donasi {
     this.createdBy,
     this.createdAt,
     this.foto,
-    this.imageUrl,  // Tambahkan ke constructor
+    this.imageUrl,
     this.nominal,
     this.pesan,
     this.progress,
     this.isEmergency,
-    this.target,     // Tambahkan ke constructor
-    this.current,    // Tambahkan ke constructor
+    this.target,
+    this.current,
   });
 
   factory Donasi.fromJson(Map<String, dynamic> json) {
@@ -63,7 +70,7 @@ class Donasi {
       createdBy: json['created_by'] != null ? int.tryParse(json['created_by'].toString()) : null,
       createdAt: json['created_at'],
       foto: json['foto'],
-      imageUrl: json['image_url'],  // Tambahkan di fromJson
+      imageUrl: json['image_url'],
       nominal: json['nominal'] != null ? double.tryParse(json['nominal'].toString()) : null,
       pesan: json['pesan'],
       progress: json['progress'] != null ? double.tryParse(json['progress'].toString()) : null,
@@ -85,7 +92,7 @@ class Donasi {
       'created_by': createdBy,
       'created_at': createdAt,
       'foto': foto,
-      'image_url': imageUrl,  // Tambahkan di toJson
+      'image_url': imageUrl,
       'nominal': nominal,
       'pesan': pesan,
       'progress': progress,
